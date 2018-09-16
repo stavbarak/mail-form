@@ -17,7 +17,7 @@ function sendRequested(userDetails) {
 
 function mailSent() {
     return {
-        type: MAIL_SENT
+        type: MAIL_SENT,
     };
 }
 
@@ -42,7 +42,7 @@ export function sendMail({mail, userDetails}) {
         response =>  dispatch(mailSent()),
         error =>  {
             console.error(error);
-            dispatch(sendMailFail());
+            dispatch(sendMailFail(error));
         }
     );
 };

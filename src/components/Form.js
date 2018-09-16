@@ -3,8 +3,11 @@ import { Field, reduxForm, reset } from 'redux-form';
 import { connect } from "react-redux";
 import { sendMail } from "../actions";
 
-import { Container, ContainerSection, Button, Label } from './common';
+import { Container, ContainerSection, Button, Label, Confirm } from './common';
+
 class Form extends Component {
+
+  // custom validations
 
   validateText(value) {
     return value && value.length >= 2 ?  undefined : `Must be 2 characters or more`
@@ -20,6 +23,9 @@ class Form extends Component {
     return value && phoneRegex.test(value) ? undefined : "Invalid phone number"
   }
 
+  /////
+  // render Field of redux-form 
+
   renderField(field) {
     const { meta: { touched, error } } = field;
     const className = `formInput form-group ${touched && error ? "has-danger" : ""}`;
@@ -34,8 +40,8 @@ class Form extends Component {
     );
   }
 
-
-
+  /////
+  
   sendMail = (values, dispatch) => {
     const { firstName, lastName, email, phone } = values;
     const mail = {
@@ -52,6 +58,7 @@ class Form extends Component {
       firstName, lastName, email, phone
     };
 
+    // call the action sendMail
     dispatch(sendMail({mail, userDetails}));
     dispatch(reset('contact'));
   }
@@ -61,9 +68,10 @@ class Form extends Component {
   }
 
   render() {
-    const { handleSubmit } = this.props;
+    const { handleSubmit, msg, type } = this.props;
     return (
       <Container>
+        <Confirm type={type} msg={msg} />
         <form onSubmit={handleSubmit(this.onSubmit)}>
         <ContainerSection>
           <Label htmlFor="firstName" text ="First Name" />
@@ -120,8 +128,12 @@ class Form extends Component {
   }
 }
 
+const mapStateToProps = (state) => ({
+  msg: state.leads.msg,
+  type: state.leads.type
+});
 
 
 export default reduxForm({
   form: "contact"
-})(connect()(Form));
+})(connect(mapStateToProps, { sendMail } )(Form));

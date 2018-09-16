@@ -7,11 +7,11 @@
                 console.log(action);
                 return _.mapKeys(action.userDetails);
             case MAIL_SENT:
-                console.log(action);
-                return { };
+                console.log('action');
+                return { ...state, msg: 'Mail sent succeessfully!', type: 'info' };
             case SEND_MAIL_FAIL:
                 console.log(action);
-                return { };
+                return { ...state, msg: 'Sending failed. Try again', type: 'danger' };
             default:
                 return state;
         }
